@@ -10,7 +10,10 @@ using Service.Services.TaskQueue;
 
 namespace Service.Services
 {
-    public class TaskSchedulerService : IHostedService, IDisposable
+    /// <summary>
+    /// Класс служба планировщика заданий 
+    /// </summary>
+    public class TaskSchedulerService : IHostedService, IDisposable // IHostedService Определяет методы для объектов, управляемых узлом, IDisposable - Предоставляет механизм для освобождения неуправляемых ресурсов. 
     {
         private Timer timer;
         private readonly IServiceProvider services;
@@ -19,6 +22,10 @@ namespace Service.Services
         private readonly Random random = new Random();
         private readonly object syncRoot = new object();
 
+        /// <summary>
+        /// Метод Срабатывает, когда хост приложения готов запустить службу.
+        /// </summary>
+        /// <param name="services">Указываем какой сервис нужно запустить</param>
         public TaskSchedulerService(IServiceProvider services)
         {
             this.services = services;
@@ -26,7 +33,11 @@ namespace Service.Services
             this.logger = services.GetRequiredService<ILogger<TaskSchedulerService>>();
         }
         
-
+        /// <summary>
+        /// Запуск службы
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             var interval = settings?.RunInterval ?? 0;
@@ -43,7 +54,7 @@ namespace Service.Services
                 TimeSpan.Zero,
                 TimeSpan.FromSeconds(interval));
 
-            return Task.CompletedTask;
+            return Task.CompletedTask; //Получает задачу, которая уже успешно завершена.
         }
 
         private void ProcessTask()
@@ -75,6 +86,11 @@ namespace Service.Services
             });
         }
 
+        /// <summary>
+        /// Завершение работы сервиса
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             timer?.Change(Timeout.Infinite, 0);
@@ -82,6 +98,9 @@ namespace Service.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Освобождает все ресурсы, используемые текущим экземпляром  System.Threading.Timer.
+        /// </summary>
         public void Dispose()
         {
             timer?.Dispose();

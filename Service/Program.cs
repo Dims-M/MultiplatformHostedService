@@ -16,18 +16,19 @@ namespace Service
     {
         static async Task Main(string[] args)
         {
-            var builder = new HostBuilder()
+            var builder = new HostBuilder() //создание основного хоста. A program initialization utility.
                 .ConfigureAppConfiguration(confBuilder =>
                 {
-                    confBuilder.AddJsonFile("config.json");
-                    confBuilder.AddCommandLine(args);
+                    confBuilder.AddJsonFile("config.json"); // Настройки конфигурации
+                    confBuilder.AddCommandLine(args); // возможность обращение через командную строку
                 })
-                .ConfigureLogging((configLogging) =>
+                .ConfigureLogging((configLogging) => //Настройка логирования
                 {
-                    configLogging.AddConsole();
-                    configLogging.AddDebug();
+                    configLogging.AddConsole(); //Выводит логи  консоль
+                    configLogging.AddDebug();  //Выводит логи в консоль выводв Visual st
                 })
-                .ConfigureServices((services) => 
+                .ConfigureServices((services) =>  //добавление доб возможностей. 
+                //Внедрение зависимостей
                 {
                     services.AddHostedService<TaskSchedulerService>();
                     services.AddHostedService<WorkerService>();
@@ -39,7 +40,7 @@ namespace Service
 
 
 
-            await builder.RunService();
+            await builder.RunService(); //запуск сервиса
         }
     }
 }
