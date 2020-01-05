@@ -16,21 +16,21 @@ namespace Service.Services
     public class TaskSchedulerService : IHostedService, IDisposable // IHostedService Определяет методы для объектов, управляемых узлом, IDisposable - Предоставляет механизм для освобождения неуправляемых ресурсов. 
     {
         private Timer timer;
-        private readonly IServiceProvider services;
-        private readonly Settings settings;
-        private readonly ILogger logger;
+        private readonly IServiceProvider services; //сервис для чтения конфигурации настроек
+        private readonly Settings settings;         //получение  настроек через клас обертку Settings
+        private readonly ILogger logger;            //обьект для работы с логом
         private readonly Random random = new Random();
         private readonly object syncRoot = new object();
 
         /// <summary>
-        /// Метод Срабатывает, когда хост приложения готов запустить службу.
+        /// Метод чтения конфигурациин настроек config.json.
         /// </summary>
         /// <param name="services">Указываем какой сервис нужно запустить</param>
         public TaskSchedulerService(IServiceProvider services)
         {
-            this.services = services;
-            this.settings = services.GetRequiredService<Settings>();
-            this.logger = services.GetRequiredService<ILogger<TaskSchedulerService>>();
+            this.services = services; 
+            this.settings = services.GetRequiredService<Settings>();  //получение  настроек через клас обертку Settings
+            this.logger = services.GetRequiredService<ILogger<TaskSchedulerService>>(); //логирование
         }
         
         /// <summary>
@@ -40,23 +40,27 @@ namespace Service.Services
         /// <returns></returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            var interval = settings?.RunInterval ?? 0;
-
+            
+            var interval = settings?.RunInterval ?? 0; //чтение настроек конфиг config.json
+           
             if (interval == 0)
             {
-                logger.LogWarning("checkInterval is not defined in settings. Set to default: 60 sec.");
+                logger.LogWarning("Интервал проверки в настройках не определен. Установлено значение по умолчанию: 60 сек.");
                 interval = 60;
             }
 
-            timer = new Timer(
-                (e) => ProcessTask(),
-                null,
-                TimeSpan.Zero,
-                TimeSpan.FromSeconds(interval));
-
-            return Task.CompletedTask; //Получает задачу, которая уже успешно завершена.
+            timer = new Timer( //обьект таймера
+                (e) => ProcessTask(), // запуск метода( (e)) выполнения
+                null, // состоянте обьекта
+                TimeSpan.Zero, // ожидания запуск.  Zero = значит запускаем сразу
+                TimeSpan.FromSeconds(interval)); // интервал запуска. Будет братся с конфига
+            //заглушка
+            return Task.CompletedTask; //Получает задачу, которая уже успешно завершена. 
         }
 
+        /// <summary>
+        /// Метод запуска
+        /// </summary>
         private void ProcessTask()
         {
             if (Monitor.TryEnter(syncRoot))

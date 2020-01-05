@@ -5,18 +5,23 @@ using System.Text;
 
 namespace Service.Models
 {
+    /// <summary>
+    /// Класс обертка над обычными настройками
+    /// </summary>
     public class Settings
     {
+        //Представляет набор свойств конфигурации приложения ключ/значение.
         private readonly IConfiguration configuration;
 
+        //конструктор.В качестве параметра передаем интерфейс экемпляр IConfiguration 
         public Settings(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            this.configuration = configuration; 
         }
 
-        public int WorkersCount => configuration.GetValue<int>("WorkersCount");
-        public int RunInterval => configuration.GetValue<int>("RunInterval");
-        public string InstanceName => configuration.GetValue<string>("name");
-        public string ResultPath => configuration.GetValue<string>("ResultPath");
+        public int WorkersCount => configuration.GetValue<int>("WorkersCount"); 
+        public int RunInterval => configuration.GetValue<int>("RunInterval"); //Получение интервала из файла настроек config.json 
+        public string InstanceName => configuration.GetValue<string>("name"); //параметр для командной строки. ОЯтправлять настроики через нее
+        public string ResultPath => configuration.GetValue<string>("ResultPath"); //получить путь в файлу
     }
 }

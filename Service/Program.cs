@@ -17,7 +17,7 @@ namespace Service
         static async Task Main(string[] args)
         {
             var builder = new HostBuilder() //создание основного хоста. A program initialization utility.
-                .ConfigureAppConfiguration(confBuilder =>
+                .ConfigureAppConfiguration(confBuilder => //конфигурация приложения Не хоста, не сервера
                 {
                     confBuilder.AddJsonFile("config.json"); // Настройки конфигурации
                     confBuilder.AddCommandLine(args); // возможность обращение через командную строку
@@ -33,7 +33,7 @@ namespace Service
                     services.AddHostedService<TaskSchedulerService>();
                     services.AddHostedService<WorkerService>();
 
-                    services.AddSingleton<Settings>();
+                    services.AddSingleton<Settings>(); //контейнер с оберткой. Для работы с файлом настроек config.json
                     services.AddSingleton<TaskProcessor>();
                     services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
                 });
