@@ -20,7 +20,7 @@ namespace Service.Services
         private readonly Settings settings;         //получение  настроек через клас обертку Settings
         private readonly ILogger logger;            //обьект для работы с логом
         private readonly Random random = new Random();
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new object(); //обьек для работы с калассом монитора в методе ProcessTask
 
         /// <summary>
         /// Метод чтения конфигурациин настроек config.json.
@@ -63,17 +63,18 @@ namespace Service.Services
         /// </summary>
         private void ProcessTask()
         {
-            if (Monitor.TryEnter(syncRoot))
+            //проверка. Должна выполнятся только одна копия метода(задачи)
+            if (Monitor.TryEnter(syncRoot))  //Обеспечивает механизм синхронизации доступа к объектам.
             {
-                logger.LogInformation($"Process task started");
+                logger.LogInformation($"{DateTime.Now} Начался процесс задач");
 
                 for (int i = 0; i < 20; i++) DoWork();
 
-                logger.LogInformation($"Process task finished");
-                Monitor.Exit(syncRoot);
+                logger.LogInformation($"{DateTime.Now} Процесс задач остановился");
+                Monitor.Exit(syncRoot); 
             }
             else
-                logger.LogInformation($"Processing is currently in progress. Skipped");
+                logger.LogInformation($"{DateTime.Now}  Processing is currently in progress. Skipped");
 
         }
 
@@ -97,6 +98,7 @@ namespace Service.Services
         /// <returns></returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            ///при нажатии кнтр С остановка работы таймера
             timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;

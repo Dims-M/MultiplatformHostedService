@@ -30,12 +30,12 @@ namespace Service
                 .ConfigureServices((services) =>  //добавление доб возможностей. 
                 //Внедрение зависимостей
                 {
-                    services.AddHostedService<TaskSchedulerService>();
+                    services.AddHostedService<TaskSchedulerService>(); // Класс служба планировщика заданий
                     services.AddHostedService<WorkerService>();
-
+                    //патерн Singleto позволяет создат. Только один экземпляр определеннного типа обьекта
                     services.AddSingleton<Settings>(); //контейнер с оберткой. Для работы с файлом настроек config.json
                     services.AddSingleton<TaskProcessor>();
-                    services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+                    services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>(); //очередь контроля многопоточных задач
                 });
 
 
