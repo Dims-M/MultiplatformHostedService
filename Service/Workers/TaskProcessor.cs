@@ -96,6 +96,7 @@ namespace Service.Workers
             using (var writer = new StreamWriter(settings.ResultPath, true, Encoding.UTF8))
             {
                 // writer.WriteLine(DateTime.Now.ToString() + $"Всего запузеных процессов {countProcesse} \t\n: " + string.Join(" ", result));
+           
             }
 
             logger.LogInformation($"Запись результпата. Резульат: {string.Join(" ", result)}");

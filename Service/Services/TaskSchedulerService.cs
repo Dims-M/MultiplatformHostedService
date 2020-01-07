@@ -7,6 +7,7 @@ using Service.Models;
 using Microsoft.Extensions.Logging;
 using Service.Workers;
 using Service.Services.TaskQueue;
+using System.IO;
 
 namespace Service.Services
 {
@@ -71,10 +72,20 @@ namespace Service.Services
                 for (int i = 0; i < 20; i++) DoWork();
 
                 logger.LogInformation($"{DateTime.Now} Процесс задач остановился");
+              //  throw new Exception("Длина строки больше 6 символов");//Искуcтвенная ошибка для тестировани
                 Monitor.Exit(syncRoot); 
             }
-            else
-                logger.LogInformation($"{DateTime.Now}  Processing is currently in progress. Skipped");
+            else //Лог ошибки
+            {
+                string ResultPathERRor = "C:\\ErrorResult.txt";
+                logger.LogInformation($"{DateTime.Now}  В настоящее время идет процесс обработки. Skipped");
+                //Запись результата в файл на жестком диске
+                using (StreamWriter writer = new StreamWriter(ResultPathERRor, true, System.Text.Encoding.UTF8))
+                {
+                    writer.WriteLine(DateTime.Now.ToString() + $"Что то пошло не так....{logger.ToString()}");// + string.Join(" ")); ;
+                }
+            }
+               
 
         }
 

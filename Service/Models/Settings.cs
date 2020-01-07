@@ -19,7 +19,7 @@ namespace Service.Models
             this.configuration = configuration; 
         }
 
-        public int WorkersCount => configuration.GetValue<int>("WorkersCount"); 
+        public int WorkersCount => configuration.GetValue<int>("WorkersCount"); // время
         public int RunInterval => configuration.GetValue<int>("RunInterval"); //Получение интервала из файла настроек config.json 
         public string InstanceName => configuration.GetValue<string>("name"); //параметр для командной строки. ОЯтправлять настроики через нее
         public string ResultPath => configuration.GetValue<string>("ResultPath"); //получить путь в файлу
