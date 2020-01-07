@@ -19,7 +19,7 @@ namespace Service.Services
         private readonly IServiceProvider services; //сервис для чтения конфигурации настроек
         private readonly Settings settings;         //получение  настроек через клас обертку Settings
         private readonly ILogger logger;            //обьект для работы с логом
-        private readonly Random random = new Random();
+        private readonly Random random = new Random(); //рандрмный генератор. для метода  DoWork()
         private readonly object syncRoot = new object(); //обьек для работы с калассом монитора в методе ProcessTask
 
         /// <summary>
@@ -78,9 +78,10 @@ namespace Service.Services
 
         }
 
+        //Задача для выволнения в очереди сервиса
         private void DoWork()
         {
-            var number = random.Next(20);
+            var number = random.Next(20); //имитация работы с помощю рандома
 
             var processor = services.GetRequiredService<TaskProcessor>();
             var queue = services.GetRequiredService<IBackgroundTaskQueue>();
