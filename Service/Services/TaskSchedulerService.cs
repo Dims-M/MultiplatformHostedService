@@ -83,12 +83,12 @@ namespace Service.Services
         {
             var number = random.Next(20); //имитация работы с помощю рандома
 
-            var processor = services.GetRequiredService<TaskProcessor>();
-            var queue = services.GetRequiredService<IBackgroundTaskQueue>();
+            var processor = services.GetRequiredService<TaskProcessor>(); // подключаем нужный класс с логикой работы
+            var queue = services.GetRequiredService<IBackgroundTaskQueue>(); // очередь для задачь. Нужная задача будет запускатся только в одном экземпляре
 
             queue.QueueBackgroundWorkItem(token =>
             {
-                return processor.RunAsync(number, token);
+                return processor.RunAsync(number, token); // запускаем наш рабочий класс с логикой на выполнение. Получаем готовый результат
             });
         }
 

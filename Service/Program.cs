@@ -34,7 +34,7 @@ namespace Service
                     services.AddHostedService<WorkerService>();
                     //патерн Singleto позволяет создат. Только один экземпляр определеннного типа обьекта
                     services.AddSingleton<Settings>(); //контейнер с оберткой. Для работы с файлом настроек config.json
-                    services.AddSingleton<TaskProcessor>();
+                    services.AddSingleton<TaskProcessor>(); // Добавляем в зависимости наш класс с логикой. Для дальнейшей работы сним во всем приложении
                     services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>(); //очередь контроля многопоточных задач
                 });
 

@@ -59,8 +59,8 @@ namespace Service.Workers
             {
                 writer.WriteLine(DateTime.Now.ToString() + " : " + string.Join(" ", result));
             }
-
-            //  logger.LogInformation($"Задача заверщилась. Резульат: {string.Join(" ", result)}");
+            //ывод в лог
+              logger.LogInformation($"Задача заверщилась. Резульат: {string.Join(" ", result)}");
         }
 
 
