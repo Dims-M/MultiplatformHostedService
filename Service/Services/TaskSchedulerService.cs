@@ -69,6 +69,7 @@ namespace Service.Services
             {
                 logger.LogInformation($"{DateTime.Now} Начался процесс задач");
 
+                //с помощью цикла запускаем 20 задач одновременно
                 for (int i = 0; i < 20; i++) DoWork();
 
                 logger.LogInformation($"{DateTime.Now} Процесс задач остановился");

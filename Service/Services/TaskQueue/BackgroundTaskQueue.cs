@@ -17,7 +17,7 @@ namespace Service.Services.TaskQueue
         private ConcurrentQueue<Func<CancellationToken, Task>> workItems = new ConcurrentQueue<Func<CancellationToken, Task>>();
         private SemaphoreSlim signal = new SemaphoreSlim(0); //семофор  который ограничивает число потоков, которые могут одновременно обращаться к ресурсу или пулу ресурсов.
 
-        public int Size => workItems.Count;
+        public int Size => workItems.Count; //размер очереди
 
         public async Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
         {

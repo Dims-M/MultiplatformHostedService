@@ -3,13 +3,15 @@ using Microsoft.Extensions.Logging;
 using Service.Models;
 using Service.Services.TaskQueue;
 using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    //Класскоторый будет брать задачу из очереди и выполнять ее. Будет выполнятся пока работает приложение
+    //Класс который будет брать задачу из очереди и выполнять ее. Будет выполнятся пока работает приложение
     public class WorkerService : BackgroundService //  Базовый класс для реализации  Microsoft.Extensions.Hosting.IHostedService.
     {
         private readonly IBackgroundTaskQueue taskQueue; //делегат 
@@ -43,22 +45,29 @@ namespace Service.Services
         {
             logger.LogInformation($"#{num} is starting.");
 
-            while(!token.IsCancellationRequested)
+            // пока token.IsCancellationRequested не поменяет свое значение. Будет работать
+            while (!token.IsCancellationRequested)
             {
-                var workItem = await taskQueue.DequeueAsync(token);
+                var workItem = await taskQueue.DequeueAsync(token);  //делегад из планировщика задач
 
                 try
                 {
-                    logger.LogInformation($"#{num}: Processing task. Queue size: {taskQueue.Size}.");
-                    await workItem(token);
+                    logger.LogInformation($"#{num}: Задача обработки. Размер очереди: {taskQueue.Size}.");
+                    await workItem(token); //запускаем делегат на выполнение
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, $"#{num}: Error occurred executing task.");
+                    logger.LogError(ex, $"#{num}: Произошла ошибка выполнения задачи.");
+                    //Запись результата в файл на жестком диске
+                    using (var writer = new StreamWriter(@"C:\\GlobalErrorsResult.txt", true, Encoding.UTF8))
+                    {
+                         writer.WriteLine(DateTime.Now.ToString() + $"Произошла ошибка WorkerService  {ex} \t\n");
+
+                    }
                 }
             }
 
-            logger.LogInformation($"#{num} is stopping.");
+            logger.LogInformation($"#{num} is Остановлен.");
         }
     }
 }

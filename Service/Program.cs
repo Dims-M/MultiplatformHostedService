@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace Service
 {
+    //https://www.youtube.com/watch?v=HSFLhoAMmoM&t=5975s
+
     class Program
     {
         static async Task Main(string[] args)
@@ -31,7 +33,7 @@ namespace Service
                 //Внедрение зависимостей
                 {
                     services.AddHostedService<TaskSchedulerService>(); // Класс служба планировщика заданий
-                    services.AddHostedService<WorkerService>();
+                    services.AddHostedService<WorkerService>(); //Реализптор, запускатор задач
                     //патерн Singleto позволяет создат. Только один экземпляр определеннного типа обьекта
                     services.AddSingleton<Settings>(); //контейнер с оберткой. Для работы с файлом настроек config.json
                     services.AddSingleton<TaskProcessor>(); // Добавляем в зависимости наш класс с логикой. Для дальнейшей работы сним во всем приложении
